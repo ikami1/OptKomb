@@ -15,5 +15,11 @@ def add_node(graph, node):
     #Wstawia wierzchołek do grafu
     if node not in graph:
         graph[node] = []
+        
+def losuj(x):
+    wierzcholek = randint(1, x)
+    waga = randint(1,20)
+    
+    
 
 funkcja()
