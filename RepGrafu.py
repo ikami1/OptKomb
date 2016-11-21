@@ -8,9 +8,12 @@ def funkcja():
     list_nodes = []                                 # lista wierzcholkow (numerowanie)
     odwiedzony = [True]                             # Zeby liczylo od 1 a nie 0
     graph = {}                                      # graf = {wierzcholek : [(wierz_konc1, waga) , (wierz_konc2, waga)], wierzcholek_nast...}
+    for i in range(1, nodes+1)
+        list_nodes.append(add_node(graph, list_nodes))
+        odwiedzony.append(False)
+
     for i in range(1, int(nodes*(nodes-1)/2)):
         losuj(graph, list_nodes)
-        odwiedzony.append(False)
 
     #for node in graph:
     #    print(graph[node], odwiedzony[node])
@@ -18,11 +21,14 @@ def funkcja():
     print(greedy(graph, nodes, odwiedzony, list_nodes))
 
 
-def add_node(graph, node, list_nodes):
-    # Wstawia wierzchołek do grafu
-    if node not in graph:
-        graph[node] = []
-        list_nodes.append(node)
+def add_node(graph, list_nodes):
+    while True:
+        node = (randint(1, 1000), randint(1, 1000))
+        # Wstawia wierzchołek do grafu
+        if node not in graph:
+            graph[node2] = []
+            list_nodes.append(node)
+            break
 
 
 def losuj(graph, list_nodes):
