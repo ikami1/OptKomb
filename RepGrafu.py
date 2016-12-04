@@ -56,12 +56,13 @@ def greedy(graph, nodes, odwiedzony, edge):
     whole_weight = 0                                # koszt przejscia grafu
     TSP_path = [first]                              # kolejne odwiedzone wierzcholki
 
-    while False in odwiedzony:                      # warunek nie dziala?
-        print("abc")
-        min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
-        odwiedzony[next] = True
-        print(odwiedzony[next], next)
-        #for node in graph:
+    print(odwiedzony[first], first, "abc")          # dlaczego tylko 3 printy?
+    for node in odwiedzony:
+        if odwiedzony[node] == False:
+            min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
+            odwiedzony[next] = True
+            print(odwiedzony[next], next)
+            #for node in graph:
 
     """
     min_waga = 100
@@ -97,8 +98,8 @@ def first_next_node(graph, current, odwiedzony, edge):
                 if node2 == node:
                     return (weight, node)'''
     for (node1, node2) in edge:
-        if node1 == current and odwiedzony[node2] == false:
-            return (weight, node2)
+        if node1 == current and odwiedzony[node2] == False:
+            return (edge[(current, node2)], node2)          #return (weight, node2)
 
 """
 Do ew. wyswietlenie grafu
