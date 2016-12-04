@@ -6,13 +6,20 @@ from math import sqrt
 
 def funkcja():
     nodes = int(input('Podaj liczbe wierzcholkow: '))
+    rozmiar = int(input('Podaj maksymalny rozmiar wspolrzednej: '))
+    losuj(nodes, rozmiar)
     odwiedzony = {}                                 # odwiedzony = {wierzcholek : True/False, ...} gdzie True - odwiedzony
     graph = {}                                      # graf = {wierzcholek : [(wierz_konc1, waga) , (wierz_konc2, waga)], wierzcholek_nast...}
                                                     # gdzie wierzcholek = (wsp_x, wsp_y)
     edge = {}                                       # edge = {(node1, node2) : waga, ...}
+    nazwa_pliku = input('Podaj nazwe pliku: ')
+    plik = open(nazwa_pliku,'r')
+    nodes = int(plik.readline())
     for i in range(1, nodes+1):
-        wsp_x = int(input())
-        wsp_y = int(input())
+        linia = plik.readline()
+        dane = linia.split()
+        wsp_x = int(dane[0])
+        wsp_y = int(dane[1])
         add_node(graph, (wsp_x, wsp_y))
 
     for node1 in graph:                             # dodawanie krawedzi
@@ -28,6 +35,22 @@ def funkcja():
 def add_node(graph, node):                          # Wstawia wierzchołek do grafu
     if node not in graph:
         graph[node] = []
+
+
+def losuj(nodes,rozmiar):
+    ile = 0
+    lista_wierzcholkow = []
+    f = open('dane.txt', 'w')
+    f.write(str(nodes)+'\n')
+    while(ile<nodes):
+        wsp_x = randint(0,rozmiar)
+        wsp_y = randint(0,rozmiar)
+        if (wsp_x,wsp_y) not in lista_wierzcholkow:
+            lista_wierzcholkow.append((wsp_x,wsp_y))
+            ile+=1
+            f.write(str(wsp_x)+' '+str(wsp_y)+'\n')
+
+
 
 
 def add_edge(graph, node1, node2, edge):                  # node = (x,y)
