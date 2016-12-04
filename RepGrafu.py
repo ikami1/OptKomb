@@ -22,8 +22,7 @@ def funkcja():
     for node in graph:                              # ustawiamy wszystkie wierzcholki na nieodwiedzone
         odwiedzony[node] = False
 
-    greedy(graph, nodes, odwiedzony, edge)
-    #print(greedy(graph, nodes, odwiedzony, edge))
+    print(greedy(graph, nodes, odwiedzony, edge))
 
 
 def add_node(graph, node):                          # Wstawia wierzchołek do grafu
@@ -51,38 +50,33 @@ def greedy(graph, nodes, odwiedzony, edge):
 
     first = los_start_node(graph, nodes)
     odwiedzony[first] = True
+    current = first                                 # aktualny wierzcholek, od niego szukamy nastepnego
 
-    current = first                                 # z tego wierzcholka chodzimy do nastepnego
     whole_weight = 0                                # koszt przejscia grafu
     TSP_path = [first]                              # kolejne odwiedzone wierzcholki
 
-    print(odwiedzony[first], first, "abc")          # dlaczego tylko 3 printy?
-    for node in odwiedzony:
-        if odwiedzony[node] == False:
-            min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
-            odwiedzony[next] = True
-            print(odwiedzony[next], next)
-            #for node in graph:
+    print(odwiedzony[first], first, "abc")
+    while True:
+        min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
+        if min_weight == -1:                        # wszystkie wierzcholki juz odwiedzone
+            break
 
-    """
-    min_waga = 100
-    min_node = list_nodes[start_node]
+        for node in graph:                          # sprawdzamy czy jest jakis blizszy current niz next
+            if (odwiedzony[node] == False) and (min_weight > edge[(node, current)]):
+                min_weight = edge[(node, current)]
+                next = node
 
-    while False in odwiedzony:
-        for (node, waga) in graph[list_nodes[start_node]]:
-            if waga <= waga:
-                min_waga = waga
-                min_node = node
+        odwiedzony[next] = True                     # idziemy do nastepnego
+        whole_weight += edge[(current, next)]
+        TSP_path.append(next)
+        current = next
+        print(odwiedzony[next], next)
 
-        start_node = min_node
-        kolejni_odwiedzeni.append(start_node)
-        waga_przejscia = waga_przejscia + min_waga
-        odwiedzony[node] = True
+    whole_weight += edge[(current, first)]          # zamykamy cykl
+    TSP_path.append(first)
 
-    #na koncu wrocic do first
+    return whole_weight, TSP_path
 
-    return waga_przejscia, kolejni_odwiedzeni
-    """
 
 def los_start_node(graph, nodes):
     L = []
@@ -91,15 +85,11 @@ def los_start_node(graph, nodes):
     return L[randint(0, nodes - 1)]
 
 
-def first_next_node(graph, current, odwiedzony, edge):
-    '''for node in graph:                                  # pierwszy nieodwiedzony jako najblizszy
-        if odwiedzony[node] == False:
-            for (node2, weight) in graph[current]:
-                if node2 == node:
-                    return (weight, node)'''
+def first_next_node(graph, current, odwiedzony, edge):      # pierwszy nieodwiedzony jako najblizszy
     for (node1, node2) in edge:
         if node1 == current and odwiedzony[node2] == False:
-            return (edge[(current, node2)], node2)          #return (weight, node2)
+            return (edge[(current, node2)], node2)          # return (weight, node2)
+    return (-1, (-1, -1))                                   # wszystkie odwiedzone juz
 
 """
 Do ew. wyswietlenie grafu
