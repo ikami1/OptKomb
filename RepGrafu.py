@@ -15,7 +15,7 @@ def funkcja():
         wsp_y = int(input())
         add_node(graph, (wsp_x, wsp_y))
 
-    for node1 in graph:                             #dodawanie krawedzi
+    for node1 in graph:                             # dodawanie krawedzi
         for node2 in graph:
             add_edge(graph, node1, node2, edge)
 
@@ -30,7 +30,7 @@ def add_node(graph, node):                          # Wstawia wierzchołek do gr
         graph[node] = []
 
 
-def add_edge(graph, node1, node2, edge):                  #node = (x,y)
+def add_edge(graph, node1, node2, edge):                  # node = (x,y)
     if node1 == node2:
         return
     x1, y1 = node1
@@ -57,7 +57,7 @@ def greedy(graph, nodes, odwiedzony, edge):
 
     print(odwiedzony[first], first, "abc")
     while True:
-        min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
+        min_weight, next = first_next_node(current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
         if min_weight == -1:                        # wszystkie wierzcholki juz odwiedzone
             break
 
@@ -85,7 +85,7 @@ def los_start_node(graph, nodes):
     return L[randint(0, nodes - 1)]
 
 
-def first_next_node(graph, current, odwiedzony, edge):      # pierwszy nieodwiedzony jako najblizszy
+def first_next_node(current, odwiedzony, edge):      # pierwszy nieodwiedzony jako najblizszy
     for (node1, node2) in edge:
         if node1 == current and odwiedzony[node2] == False:
             return (edge[(current, node2)], node2)          # return (weight, node2)
