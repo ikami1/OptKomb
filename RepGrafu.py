@@ -3,62 +3,69 @@
 from random import randint
 from math import sqrt
 
+
 def funkcja():
     nodes = int(input('Podaj liczbe wierzcholkow: '))
-    list_nodes = []                                 # lista wierzcholkow (numerowanie)
-    odwiedzony = [True]                             # Zeby liczylo od 1 a nie 0
+    odwiedzony = {}                                 # odwiedzony = {wierzcholek : True/False, ...} gdzie True - odwiedzony
     graph = {}                                      # graf = {wierzcholek : [(wierz_konc1, waga) , (wierz_konc2, waga)], wierzcholek_nast...}
-    for i in range(1, nodes+1)
-        list_nodes.append(add_node(graph, list_nodes))
-        odwiedzony.append(False)
+                                                    # gdzie wierzcholek = (wsp_x, wsp_y)
+    edge = {}                                       # edge = {(node1, node2) : waga, ...}
+    for i in range(1, nodes+1):
+        wsp_x = int(input())
+        wsp_y = int(input())
+        add_node(graph, (wsp_x, wsp_y))
 
-    for i in range(1, int(nodes*(nodes-1)/2)):
-        losuj(graph, list_nodes)
+    for node1 in graph:                             #dodawanie krawedzi
+        for node2 in graph:
+            add_edge(graph, node1, node2, edge)
 
-    #for node in graph:
-    #    print(graph[node], odwiedzony[node])
+    for node in graph:                              # ustawiamy wszystkie wierzcholki na nieodwiedzone
+        odwiedzony[node] = False
 
-    print(greedy(graph, nodes, odwiedzony, list_nodes))
-
-
-def add_node(graph, list_nodes):
-    while True:
-        node = (randint(1, 1000), randint(1, 1000))
-        # Wstawia wierzchołek do grafu
-        if node not in graph:
-            graph[node2] = []
-            list_nodes.append(node)
-            break
+    greedy(graph, nodes, odwiedzony, edge)
+    #print(greedy(graph, nodes, odwiedzony, edge))
 
 
-def losuj(graph, list_nodes):
+def add_node(graph, node):                          # Wstawia wierzchołek do grafu
+    if node not in graph:
+        graph[node] = []
 
-    while True:
-        x1 = randint(1, 1000)                           #wierzcholek = (x,y)
-        y1 = randint(1, 1000)
-        x2 = randint(1, 1000)
-        y2 = randint(1, 1000)
-        node1 = (x1, y1)
-        node2 = (x2, y2)
-        if node1 != node2:
-            break
 
-    waga = sqrt(pow(x1-x2,2) + pow(y1-y2,2))
+def add_edge(graph, node1, node2, edge):                  #node = (x,y)
+    if node1 == node2:
+        return
+    x1, y1 = node1
+    x2, y2 = node2
 
-    add_node(graph, node1, list_nodes)
-    add_node(graph, node2, list_nodes)
+    weight = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
 
-    if node2 not in graph[node1]:
-        graph[node1].append((node2, waga))
-        graph[node2].append((node1, waga))
+    if (node2, weight) not in graph[node1]:
+        edge[(node1, node2)] = weight
+        graph[node1].append((node2, weight))
+    if (node1, weight) not in graph[node2]:
+        edge[(node2, node1)] = weight
+        graph[node2].append((node1, weight))
 
-def greedy(graph, nodes, odwiedzony, list_nodes):
-    start_node = randint(1, nodes)
+
+def greedy(graph, nodes, odwiedzony, edge):
+
+    first = los_start_node(graph, nodes)
+    odwiedzony[first] = True
+
+    current = first                                 # z tego wierzcholka chodzimy do nastepnego
+    whole_weight = 0                                # koszt przejscia grafu
+    TSP_path = [first]                              # kolejne odwiedzone wierzcholki
+
+    while False in odwiedzony:                      # warunek nie dziala?
+        print("abc")
+        min_weight, next = first_next_node(graph, current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
+        odwiedzony[next] = True
+        print(odwiedzony[next], next)
+        #for node in graph:
+
+    """
     min_waga = 100
     min_node = list_nodes[start_node]
-    odwiedzony[start_node] = True
-    waga_przejscia = 0
-    kolejni_odwiedzeni = [start_node]
 
     while False in odwiedzony:
         for (node, waga) in graph[list_nodes[start_node]]:
@@ -71,7 +78,43 @@ def greedy(graph, nodes, odwiedzony, list_nodes):
         waga_przejscia = waga_przejscia + min_waga
         odwiedzony[node] = True
 
-    return waga_przejscia, kolejni_odwiedzeni
+    #na koncu wrocic do first
 
+    return waga_przejscia, kolejni_odwiedzeni
+    """
+
+def los_start_node(graph, nodes):
+    L = []
+    for node in graph:
+        L.append(node)
+    return L[randint(0, nodes - 1)]
+
+
+def first_next_node(graph, current, odwiedzony, edge):
+    '''for node in graph:                                  # pierwszy nieodwiedzony jako najblizszy
+        if odwiedzony[node] == False:
+            for (node2, weight) in graph[current]:
+                if node2 == node:
+                    return (weight, node)'''
+    for (node1, node2) in edge:
+        if node1 == current and odwiedzony[node2] == false:
+            return (weight, node2)
+
+"""
+Do ew. wyswietlenie grafu
+
+def listnodes(graph):
+    #Zwraca listę wierzchołków grafu.
+    return graph.keys()
+
+
+def listedges(graph):
+    #Zwraca listę krawędzi (krotek) grafu.
+    L = []
+    for source in graph:
+        for (target, weight) in graph[source]:
+            L.append((source, target, weight))
+    return L
+"""
 
 funkcja()
