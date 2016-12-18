@@ -8,34 +8,27 @@ def funkcja():
     nodes = int(input('Podaj liczbe wierzcholkow: '))
     rozmiar = int(input('Podaj maksymalny rozmiar wspolrzednej: '))
     losuj(nodes, rozmiar)
-    odwiedzony = {}                                 # odwiedzony = {wierzcholek : True/False, ...} gdzie True - odwiedzony
-    graph = {}                                      # graf = {wierzcholek : [(wierz_konc1, waga) , (wierz_konc2, waga)], wierzcholek_nast...}
-                                                    # gdzie wierzcholek = (wsp_x, wsp_y)
-    edge = {}                                       # edge = {(node1, node2) : waga, ...}
+    lista_wierzcholkow=[]                                                                           # lista_wierzcholkow = [(x,y),(x,y)......]
+    odwiedzony = {}                                                                                 # odwiedzony = {wierzcholek : True/False, ...} gdzie True - odwiedzony
+                                                                                                    # gdzie wierzcholek = (wsp_x, wsp_y)
+    Matrix = [[0 for x in range(rozmiar)] for y in range(rozmiar)]
     nazwa_pliku = input('Podaj nazwe pliku: ')
     plik = open(nazwa_pliku,'r')
     nodes = int(plik.readline())
-    for i in range(1, nodes+1):
+
+    for i in range(0, nodes):
         linia = plik.readline()
         dane = linia.split()
         wsp_x = int(dane[0])
         wsp_y = int(dane[1])
-        add_node(graph, (wsp_x, wsp_y))
+        lista_wierzcholkow.append((wsp_x, wsp_y))
+    for i in range(0,nodes):                                                                        # dodawanie krawedzi
+        for j in range(0,nodes):
+            Matrix[i][j]=sqrt(pow(lista_wierzcholkow[i][0] - lista_wierzcholkow[j][0], 2) + pow(lista_wierzcholkow[i][1] - lista_wierzcholkow[j][1], 2))
 
-    for node1 in graph:                             # dodawanie krawedzi
-        for node2 in graph:
-            add_edge(graph, node1, node2, edge)
-
-    for node in graph:                              # ustawiamy wszystkie wierzcholki na nieodwiedzone
+    for node in lista_wierzcholkow:                                                                 # ustawiamy wszystkie wierzcholki na nieodwiedzone
         odwiedzony[node] = False
-
-    print(greedy(graph, nodes, odwiedzony, edge))
-
-
-def add_node(graph, node):                          # Wstawia wierzchołek do grafu
-    if node not in graph:
-        graph[node] = []
-
+    print(greedy(Matrix, nodes, odwiedzony,lista_wierzcholkow))
 
 def losuj(nodes,rozmiar):
     ile = 0
@@ -50,69 +43,48 @@ def losuj(nodes,rozmiar):
             ile+=1
             f.write(str(wsp_x)+' '+str(wsp_y)+'\n')
 
+def greedy(Matrix, nodes, odwiedzony,lista_wierzcholkow):
 
-
-
-def add_edge(graph, node1, node2, edge):                  # node = (x,y)
-    if node1 == node2:
-        return
-    x1, y1 = node1
-    x2, y2 = node2
-
-    weight = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
-
-    if (node2, weight) not in graph[node1]:
-        edge[(node1, node2)] = weight
-        graph[node1].append((node2, weight))
-    if (node1, weight) not in graph[node2]:
-        edge[(node2, node1)] = weight
-        graph[node2].append((node1, weight))
-
-
-def greedy(graph, nodes, odwiedzony, edge):
-
-    first = los_start_node(graph, nodes)
+    first = los_start_node(lista_wierzcholkow, nodes)
     odwiedzony[first] = True
-    current = first                                 # aktualny wierzcholek, od niego szukamy nastepnego
+    current = first                                                                                 # aktualny wierzcholek, od niego szukamy nastepnego
 
-    whole_weight = 0                                # koszt przejscia grafu
-    TSP_path = [first]                              # kolejne odwiedzone wierzcholki
+    whole_weight = 0                                                                                # koszt przejscia grafu
+    TSP_path = [first]                                                                              # kolejne odwiedzone wierzcholki
 
     print(odwiedzony[first], first, "abc")
     while True:
-        min_weight, next = first_next_node(current, odwiedzony, edge)    # pierwszy nieodwiedzony jako najblizszy
-        if min_weight == -1:                        # wszystkie wierzcholki juz odwiedzone
+        min_weight, next = first_next_node(current, odwiedzony, Matrix, nodes, lista_wierzcholkow)  # pierwszy nieodwiedzony jako najblizszy
+        if min_weight == -1:                                                                        # wszystkie wierzcholki juz odwiedzone
             break
 
-        for node in graph:                          # sprawdzamy czy jest jakis blizszy current niz next
-            if (odwiedzony[node] == False) and (min_weight > edge[(node, current)]):
-                min_weight = edge[(node, current)]
+        for node in lista_wierzcholkow:                                                             # sprawdzamy czy jest jakis blizszy current niz next
+            if (odwiedzony[node] == False) and (min_weight > Matrix[lista_wierzcholkow.index(node)][lista_wierzcholkow.index(current)]):
+                min_weight = Matrix[lista_wierzcholkow.index(node)][lista_wierzcholkow.index(current)]
                 next = node
 
-        odwiedzony[next] = True                     # idziemy do nastepnego
-        whole_weight += edge[(current, next)]
+        odwiedzony[next] = True                                                                     # idziemy do nastepnego
+        whole_weight += Matrix[lista_wierzcholkow.index(current)][lista_wierzcholkow.index(next)]
         TSP_path.append(next)
         current = next
         print(odwiedzony[next], next)
 
-    whole_weight += edge[(current, first)]          # zamykamy cykl
+    whole_weight += Matrix[lista_wierzcholkow.index(current)][lista_wierzcholkow.index(first)]                                                          # zamykamy cykl
     TSP_path.append(first)
 
     return whole_weight, TSP_path
 
 
-def los_start_node(graph, nodes):
-    L = []
-    for node in graph:
-        L.append(node)
-    return L[randint(0, nodes - 1)]
+def los_start_node(lista_wierzcholkow, nodes):
+    return lista_wierzcholkow[randint(0, nodes - 1)]
 
 
-def first_next_node(current, odwiedzony, edge):      # pierwszy nieodwiedzony jako najblizszy
-    for (node1, node2) in edge:
-        if node1 == current and odwiedzony[node2] == False:
-            return (edge[(current, node2)], node2)          # return (weight, node2)
-    return (-1, (-1, -1))                                   # wszystkie odwiedzone juz
+def first_next_node(current, odwiedzony, Matrix, nodes, lista_wierzcholkow):                        # pierwszy nieodwiedzony jako najblizszy
+    for node1 in range(0,nodes):
+        for node2 in range(0,nodes):
+            if lista_wierzcholkow[node1] == current and odwiedzony[lista_wierzcholkow[node2]] == False:
+                return (Matrix[node1][node2], lista_wierzcholkow[node2])                            # return (weight, node2)
+    return (-1, (-1, -1))                                                                           # wszystkie odwiedzone juz
 
 """
 Do ew. wyswietlenie grafu
