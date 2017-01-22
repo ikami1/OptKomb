@@ -42,10 +42,25 @@ def main():
 
 
     r = 0.999
-    T = 100.0
-    Tmin = 1.0
     print(naj, rozw)
-    wynik, rozwAnnealing = SimulatedAnnealing(graph, nodes, naj, rozw, T, Tmin, r)
+    #while r < 0.9999:
+    #    r += 0.0001
+    #    print(SimulatedAnnealing(graph, nodes, naj, rozw, T, Tmin, r))
+    for r in range(990, 999, 1):
+        T = 100.0
+        Tmin = 1.0
+        r = r/1000
+        print(T, Tmin, r)
+        wynik, rozwAnnealing = SimulatedAnnealing(graph, nodes, naj, rozw, T, Tmin, r)
+        if wynik < naj:
+            naj = wynik
+            rozw = rozwAnnealing
+    for r in range(9990, 9999, 1):
+        r = r/10000
+        T = 100.0
+        Tmin = 1.0
+        print(T, Tmin, r)
+        wynik, rozwAnnealing = SimulatedAnnealing(graph, nodes, naj, rozw, T, Tmin, r)
         if wynik < naj:
             naj = wynik
             rozw = rozwAnnealing
