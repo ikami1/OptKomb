@@ -1,6 +1,6 @@
 # OptKomb
 
 
-Reprezentacja grafu + zachłanny zrobione. Czekam na ciebie
+http://sirius.cs.put.poznan.pl/~inf127205/ok/
 
 Update: RepGrafu to główna część reszta ma algorytmy
