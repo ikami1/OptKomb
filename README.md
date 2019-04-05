@@ -2,9 +2,10 @@
 
 Simulated Annealing
 
+dane.txt - instance
+greedy.py - greedy algorithm
+SimulatedAnnealing.py - heuristic algorithm
+RepGrafu.py - graph representation
 
+Results visualization: (for graphs with limited number of vertices)
 http://sirius.cs.put.poznan.pl/~inf127205/ok/
-
-W dane.txt jest instancja. Pokaż jak wygląda po greedim, w czasie polepszania i na końcu (da optimum).
-
-Update: RepGrafu to główna część reszta ma algorytmy
