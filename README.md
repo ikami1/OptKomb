@@ -1,4 +1,6 @@
-# OptKomb
+# Optymalizacja Kombinatoryczna - The travelling salesman problem
+
+Simulated Annealing
 
 
 http://sirius.cs.put.poznan.pl/~inf127205/ok/
